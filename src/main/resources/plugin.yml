@@ -1,0 +1,20 @@
+name: Chatty
+version: '${project.version}'
+main: com.jay.chatty.ChattyPlugin
+api-version: 1.18
+authors: [ xxJay ]
+description: Chatty帮助你管理服务器的聊天
+
+commands:
+  mute-all:
+    description: 全服禁言
+    usage: /mute-all
+    permission: op
+    mute:
+      description: 对单个玩家禁言
+      usage: /mute <player> <minutes>
+      permission: op
+    unmute:
+      description: 解除一个玩家的禁言
+      usage: /unmute <player>
+      permission: op
