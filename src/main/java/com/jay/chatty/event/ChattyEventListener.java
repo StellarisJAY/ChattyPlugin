@@ -34,8 +34,14 @@ public class ChattyEventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChatEvent(AsyncChatEvent event){
         if(muteManager.getMuteAllSwitch()){
+            // 全服禁言已开启
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.AQUA + "无法发送消息，服务器处于禁言状态");
+        }
+        else if(muteManager.containsPlayer(event.getPlayer().getName())){
+            // 玩家被禁言
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.AQUA + "无法发送消息，你已被禁言");
         }
     }
 }

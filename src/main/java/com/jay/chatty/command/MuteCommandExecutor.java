@@ -1,11 +1,13 @@
 package com.jay.chatty.command;
 
 import com.jay.chatty.mute.MuteManager;
+import com.jay.chatty.mute.MutedPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -42,6 +44,49 @@ public class MuteCommandExecutor implements CommandExecutor {
                 sender.sendMessage("无效命令，服务器位未于禁言状态。。。");
             }
         }
+        else if(commandName.equals(ChattyCommands.MUTE)){
+            handleMute(sender, command, label, args);
+        }
+        else if(commandName.equals(ChattyCommands.UN_MUTE)){
+            handleUnMute(sender, command, label, args);
+        }
         return true;
+    }
+
+    private void handleMute(CommandSender sender, Command command, String label, String[] args){
+        if(args.length < 1){
+            sender.sendMessage("mute 缺少参数：玩家名、禁言时长");
+        }
+        String playerName = args[0];
+        Player player = Bukkit.getPlayer(playerName);
+        if(player == null){
+            sender.sendMessage("没有找到玩家：" + playerName);
+        }
+        else{
+            String arg1 = null;
+            if(args.length > 1){
+                arg1 = args[1];
+            }
+            try{
+                long time = arg1 == null ? -1 : Long.parseLong(arg1);
+                muteManager.addPlayer(player, time * 60 * 1000);
+                player.sendMessage(ChatColor.AQUA + "你已被禁言 " + time + " 分钟");
+            }catch (Exception e){
+                sender.sendMessage("禁言时长无效");
+            }
+        }
+    }
+
+    private void handleUnMute(CommandSender sender, Command command, String label, String[] args){
+        if(args.length < 1){
+            sender.sendMessage("mute 缺少参数：玩家名、禁言时长");
+        }
+        String playerName = args[0];
+        MutedPlayer mutedPlayer = muteManager.removePlayer(playerName);
+        if(mutedPlayer == null){
+            sender.sendMessage("无法解除禁言，玩家没有被禁言");
+        }else{
+            mutedPlayer.getPlayer().sendMessage(ChatColor.AQUA + "你已被解除禁言，请遵守服务器规则友好交流");
+        }
     }
 }
