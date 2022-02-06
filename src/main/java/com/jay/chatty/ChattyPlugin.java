@@ -19,13 +19,17 @@ public final class ChattyPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        //register commands
+        // 加载持久化数据
+        int loadedMutedPlayer = muteManager.loadPersistenceData();
+        getLogger().info("禁言玩家列表加载完成，共加载 " + loadedMutedPlayer + " 名被禁言玩家");
+
+        // 注册命令
         getCommand(ChattyCommands.MUTE_ALL).setExecutor(muteCommandExecutor);
         getCommand(ChattyCommands.UN_MUTE_ALL).setExecutor(muteCommandExecutor);
         getCommand(ChattyCommands.MUTE).setExecutor(muteCommandExecutor);
         getCommand(ChattyCommands.UN_MUTE).setExecutor(muteCommandExecutor);
 
-        //register event listeners
+        // 注册事件监听器
         Bukkit.getPluginManager().registerEvents(eventListener, this);
 
         getLogger().info("Chatty 加载完成");
@@ -33,6 +37,8 @@ public final class ChattyPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info("Chatty 已禁用");
+        // 持久化被禁言玩家集合
+        muteManager.persistence();
+        getLogger().info("Chatty 已停用");
     }
 }
