@@ -86,7 +86,10 @@ public class MuteCommandExecutor implements CommandExecutor {
         if(mutedPlayer == null){
             sender.sendMessage("无法解除禁言，玩家没有被禁言");
         }else{
-            mutedPlayer.getPlayer().sendMessage(ChatColor.AQUA + "你已被解除禁言，请遵守服务器规则友好交流");
+            Player player = Bukkit.getPlayer(playerName);
+            if(player != null){
+                player.sendMessage(ChatColor.AQUA + "你已被解除禁言，请遵守服务器规则友好交流");
+            }
         }
     }
 }
